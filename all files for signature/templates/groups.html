@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aplikacja szkoleniowa BOSCH</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.jpg') }}" type="image/x-icon">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <script defer src="{{ url_for('static', filename='js/all.js') }}"></script>
+        <!-- Bulma Version 0.9.0-->
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" /> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}" />
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/hero.css') }}">
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma-modal-fx/dist/css/modal-fx.min.css" /> -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/modal-fx.min.css') }}" />
+    </head>
+    <body>
+        
+        <section class="hero is-info is-bold">
+            <div class="hero-head">
+                <nav class="navbar">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="../">
+                                <img src="static/images/logo.png" alt="Logo">
+                            </a>
+                            <span class="navbar-burger burger" data-target="navbarMenu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </div>
+                        <div id="navbarMenu" class="navbar-menu">
+                            <div class="navbar-end">
+                                <div class="tabs is-right">
+                                    <ul>
+                                        <li><a href="/">Przeprowadź szkolenie</a></li>
+                                        <li class="is-active"><a href="/groups">Grupy szkoleniowe</a></li>
+                                        <li><a href="/add_training">Dodaj szkolenie</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title">
+                    Aplikacja szkoleniowa
+                    </h1>
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function openTab(tabName){
+                var tab_add = document.getElementById('tab_add');
+                var tab_edit = document.getElementById('tab_edit');
+                var section_add = document.getElementById('add_section');
+                var section_edit = document.getElementById('edit_section');
+                var box_add = document.getElementById('box_add');
+                var box_edit = document.getElementById('box_edit');
+                if (tabName == 'add'){
+                    tab_add.classList.add('is-active')
+                    tab_edit.classList.remove('is-active')
+                    section_add.classList.remove('is-hidden')
+                    section_edit.classList.add('is-hidden')
+                    box_add.classList.remove('is-hidden')
+                    box_edit.classList.add('is-hidden')
+                }
+                else if (tabName == 'edit'){
+                    tab_add.classList.remove('is-active')
+                    tab_edit.classList.add('is-active')
+                    section_add.classList.add('is-hidden')
+                    section_edit.classList.remove('is-hidden')
+                    box_add.classList.add('is-hidden')
+                    box_edit.classList.remove('is-hidden')
+                }
+
+            }
+        </script>
+
+
+        <div class="box cta" style="padding-top: 0px; padding-bottom: 10px">
+            <div class="tabs is-centered is-boxed" style="margin-bottom: 10px;">
+                <ul>
+                  <li id="tab_add" class="is-active" onclick="openTab('add')">
+                    <a>
+                      <span class="icon is-small"><i class="far fa-plus-square" aria-hidden="true"></i></span>
+                      <span>Dodaj</span>
+                    </a>
+                  </li>
+                  <li id="tab_edit" class="" onclick="openTab('edit')"> 
+                    <a>
+                      <span class="icon is-small"><i class="fas fa-edit" aria-hidden="true"></i></span>
+                      <span>Edytuj</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            <p id="box_add" class="has-text-centered">
+             Załaduj listę pracowników na szkolenia.
+            </p>
+
+            <p id="box_edit" class="has-text-centered is-hidden">
+                Wybierz grupę do edycji
+               </p>
+        </div>
+        <form method="POST", enctype = "multipart/form-data">
+
+        <section id="add_section" class="container">
+            <div class="container" style="max-width: 500px;">
+                <div class="field">
+                    <label class="label">Plik z lista pracowników</label>
+                            <div id="file-js-example2" class="file has-name is-fullwidth">
+                                <label class="file-label">
+                                  <input class="file-input" type="file" name="group">
+                                  <span class="file-cta">
+                                    <span class="file-icon">
+                                      <i class="fas fa-upload"></i>
+                                    </span>
+                                    <span class="file-label">
+                                      Wybierz
+                                    </span>
+                                  </span>
+                                  <span class="file-name">
+                                    Brak pliku
+                                  </span>
+                                </label>
+                                
+                              </div>
+                              
+                              <script>
+                                const fileInput2 = document.querySelector('#file-js-example2 input[type=file]');
+                                fileInput2.onchange = () => {
+                                  if (fileInput2.files.length > 0) {
+                                    const fileName2 = document.querySelector('#file-js-example2 .file-name');
+                                    fileName2.textContent = fileInput2.files[0].name;
+                                  }
+                                }
+                              </script>
+                <button class="button is-large is-fullwidth" style="margin-top: 10px; margin-bottom: 10px;">Załaduj</button>
+
+
+                </div>
+
+            </div>
+            <figure class="image">
+                <b>Przykład:</b>
+                <img src="static\images\example_new_group.png">
+              </figure>
+              
+        </section>
+
+        </form>
+        <section id="edit_section" class="container is-hidden">
+            <form id="form2" method="POST">
+            <div class="container" style="max-width: 500px;">
+                <label class="label">Dostępne grupy szkoleniowe</label>
+                <div class="select" style="width: 100%;">
+                    <select name="delete_group" style="width: 100%;">
+                            {% for group in groups %}
+                            <option>{{group}}</option>
+                            {% endfor %}
+                    </select>
+                </div> 
+              <div style="margin-top: 10px;"> 
+                <button style="width: 100%;" type="button" name="delete_group" id="delete_group" value="delete_group" style="margin-top: 10px;" class="button is-large is-danger" return false;>
+                    <span>Usuń grupę</span>
+                    <span class="icon is-small">
+                    <i class="fas fa-times"></i>
+                    </span>
+                </button>
+
+            </div>
+            </form>
+        </section>
+
+        <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+              <section class="modal-card-body has-text-centered">
+              <div class="content">
+                <h3>Czy napewno chcesz usunąć grupę?</h3>
+              <div> 
+              </section>
+              <!-- <form method="POST" enctype="multipart/form-data"> -->
+              <footer class="modal-card-foot">
+                    <button type="submit" class="button is-success" style="width: 75%;" id="confirmbtn">Tak</button>
+                <!-- </form>        -->
+                <button class="button is-danger" style="width: 25%;" id="closebtn">Nie</button>           
+              </footer>           
+            </div>
+          </div>
+
+          <script>
+            $(document).ready(function(){         
+            $("#delete_group").click(function() {    
+              $(".modal").addClass("is-active");         
+            });                          
+            $("#closebtn").click(function() {
+                        
+               $(".modal").removeClass("is-active");        
+            });         
+            $("#confirmbtn").click(function() {  
+               document.getElementById('form2').submit();         
+               $(".modal").removeClass("is-active"); 
+                     
+            });          
+            }); 
+            </script>
+
+        {% if edit == True %}
+        <script>
+            openTab('edit')
+        </script>
+        {% endif %}
+        <!-- <footer class="footer">
+            <script src="js/bulma.js"></script>
+        </footer> -->
+    </body>
+</html>

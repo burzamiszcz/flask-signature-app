@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aplikacja szkoleniowa BOSCH</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.jpg') }}" type="image/x-icon">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <!-- Bulma Version 0.9.0-->
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" /> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}" />
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/hero.css') }}">
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma-modal-fx/dist/css/modal-fx.min.css" /> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/modal-fx.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.css') }}">
+        <script src="{{ url_for('static', filename='js/jquery-1.12.4.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+    </head>
+    <body>
+        <section class="hero is-info is-bold">
+            <div class="hero-head">
+                <nav class="navbar">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="../">
+                                <img src="static/images/logo.png" alt="Logo">
+                            </a>
+                            <span class="navbar-burger burger" data-target="navbarMenu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </div>
+                        <div id="navbarMenu" class="navbar-menu">
+                            <div class="navbar-end">
+                                <div class="tabs is-right">
+                                    <ul>
+                                        <li><a href="/">Przeprowadź szkolenie</a></li>
+                                        <li><a href="/groups">Grupy szkoleniowe</a></li>
+                                        <li class="is-active"><a href="/add_training">Dodaj szkolenie</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title">
+                    Aplikacja szkoleniowa
+                    </h1>
+                </div>
+            </div>
+        </section>
+        <div class="box cta">
+            <p class="has-text-centered">
+             Uzupełnij dane dotyczące szkolenia
+            </p>
+        </div>
+        <form method="POST", enctype = "multipart/form-data">
+        <section class="container">
+            <div class="container" style="max-width: 700px;">
+                <div class="field">
+                    <div class="columns">
+                        <div class="column">
+                            <input id="title_input" class="input" type="text" name = "title" placeholder="Tytuł szkolenia">
+                            <p id = "title_error" class="help is-danger is-hidden">Szkolenie o takiej nazwie już istnieje, zmień nazwę szkolenia!</p>    
+                            <script>
+                                const title_input = document.getElementById('title_input');
+                                title_input.onchange = () => {
+                                    const title_input = document.getElementById('title_input').value;
+                                    const trainings = {{trainings | tojson}};
+                                    if (trainings.includes(title_input)){
+                                        var title_error = document.getElementById('title_error');
+                                        var title_input_var = document.getElementById('title_input');
+                                        var add_training = document.getElementById('add_training');
+
+                                        add_training.classList.add("is-static")
+                                        add_training.classList.add("is-outlined")
+                                        add_training.classList.add("is-danger")
+                                        title_input_var.classList.add("is-danger")
+                                        title_error.classList.remove("is-hidden")
+                                    }
+                                    else{
+                                        var title_error = document.getElementById('title_error');
+                                        var title_input_var = document.getElementById('title_input');
+                                        var add_training = document.getElementById('add_training');
+                                        add_training.classList.remove("is-static")
+                                        add_training.classList.remove("is-outlined")
+                                        add_training.classList.remove("is-danger")
+                                        title_input_var.classList.remove("is-danger")
+                                        title_error.classList.add("is-hidden")
+                                    }
+                                }
+                            </script>
+                            
+                        </div>
+                          
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="columns">
+                        <div class="column">
+                            <input class="input" type="text" name = "teacher" placeholder="Prowadzący szkolenie">
+                        </div>
+                        <div class="column">
+                        <div style="width: 100%;" class="select" style="width: 100%;">
+                            <select class="select" name="time" id="time" style="width: 100%;">
+                                <option>15 min</option>
+                                <option>30 min</option>
+                                <option>1 godz</option>
+                                <option>1 godz 30 min</option>
+                                <option>2 godz</option>
+                                <option>2 godz 30 min</option>
+                                <option>3 godz</option>
+                            </select>
+                        </div>  
+                        </div>
+                        <div class="column">
+                            <input class="input" type="text" id="datepicker" name="date" placeholder="Data szkolenia" readonly="readonly">
+                        </div>        
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="columns">
+                        <div class="column">
+                            <textarea class="textarea" type="text" name="agenda" placeholder="Agenda" rows="7" wrap="virtual"></textarea>
+                        </div>      
+                    </div>
+                 </div>
+                </form>
+                 <button onclick="loading();" id="add_training" class="button is-large is-fullwidth" style="margin-top: 20px;">Dodaj szkolenie</button>
+                <script>
+                    function loading(){
+                        var add_training = document.getElementById('add_training');
+                        add_training.classList.add("is-loading")
+                    }                
+                </script>
+
+                <script>
+                $( function() {
+                  $( "#datepicker" ).datepicker();
+                } );
+                </script>
+            </div>
+        </section>
+    </body>
+</html>
+    
