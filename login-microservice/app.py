@@ -1,53 +1,34 @@
 from flask import Flask, jsonify, request
 import requests
-
-from flask_mysqldb import MySQL, MySQLdb
+import sqlite3
 
 app = Flask(__name__)
 
-app.config['MYSQL_USER'] = '19294_zpi'
-app.config['MYSQL_PASSWORD'] = 'zpipwr2021'
-app.config['MYSQL_DB'] = '19294_zpi'
-app.config['MYSQL_HOST'] = 'zpipwr2021.atthost24.pl'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-mysql = MySQL(app)
+def dict_factory(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', 'GET'])
 def login():
     username = request.json['username']
     password = request.json['password']
-    email = request.json['email']
-
-    print(username, password, email)
 
     if username:
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute("SELECT * FROM Users WHERE username=%s",(username,))
-        user = cur.fetchone()
-        cur.close()
-
-    if email:
-        try:
-            print(username, password, email, flush=True)
-            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute("SELECT * FROM Users WHERE username=\'%s\'"%(email,))
-            #cur.execute("SELECT * FROM Users WHERE username=\'adam.fabijan@gmail.com\'")
-            user = cur.fetchone()
-            cur.close()
-            print(user['credential'], flush=True)
-        except:
-            return jsonify({"credential": None})
+        conn = sqlite3.connect('users.db')
+        conn.row_factory = dict_factory
+        c = conn.cursor()  
+        c.execute(f"SELECT * FROM users WHERE username='{username}'")
+        user = c.fetchone()
+        c.close()
     try:
         if user:
             if password == user['password']:
                 return jsonify({'credential': user['credential'], 'id': user['id'], 'username': user['username']})
     except: 
         return jsonify({"credential": None})
-        
-    if email:
-        print(user['credential'], flush=True)
-        return jsonify({'credential': user['credential'], 'id': user['id'], 'username': user['username']})
 
     return jsonify({"credential": None})
 

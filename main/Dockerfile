@@ -1,4 +1,5 @@
-FROM python:3.8-buster
+FROM openjdk:slim
+COPY --from=python:3.8-slim / /
 
 WORKDIR /app
 
@@ -9,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
-
+ 
 RUN pip3 install -r requirements.txt
 
 COPY . .
