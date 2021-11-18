@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aplikacja szkoleniowa BOSCH</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.jpg') }}" type="image/x-icon">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <!-- Bulma Version 0.9.0-->
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma@0.9.0/css/bulma.min.css" /> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bulma.min.css') }}" />
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/hero.css') }}">
+        <!-- <link rel="stylesheet" href="https://unpkg.com/bulma-modal-fx/dist/css/modal-fx.min.css" /> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/modal-fx.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.css') }}">
+        <script src="{{ url_for('static', filename='js/jquery-1.12.4.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+    </head>
+    <body>
+        <section class="hero is-info is-bold">
+            <div class="hero-head">
+                <nav class="navbar">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="../">
+                                <img src="static/images/logo.png" alt="Logo">
+                            </a>
+                            <span class="navbar-burger burger" data-target="navbarMenu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                        </div>
+                        <div id="navbarMenu" class="navbar-menu">
+                            <div class="navbar-end">
+                                <div class="tabs is-right">
+                                    <ul>
+                                        <li><a href="/main">Przeprowadź szkolenie</a></li>
+                                        <li><a href="/groups">Grupy szkoleniowe</a></li>
+                                        <li><a href="/add_training">Dodaj szkolenie</a></li>
+                                        <li class="is-active"><a href="/add_user">Dodaj użytkownika</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title">
+                    Aplikacja szkoleniowa
+                    </h1>
+                </div>
+            </div>
+        </section>
+        <div class="box cta">
+            <p class="has-text-centered">
+             Uzupełnij dane dotyczące szkolenia
+            </p>
+        </div>
+        <form method="POST", enctype = "multipart/form-data">
+            <div class="container section">
+
+                <div class="box main">
+                    <form method="POST">
+                        <div class="field">
+                            <label class="label">Podaj nazwe użytkownika</label>
+                            <div class="control has-icons-left">
+                                <input class="input" type="text" name="username_add" placeholder="Username">
+                                <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                      </span>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Podaj hasło</label>
+                            <p class="control has-icons-left">
+                                <input class="input" type="text" name="password_add" placeholder="Password">
+                                <span class="icon is-small is-left">
+                        <i class="fas fa-lock"></i>
+                      </span>
+                            </p>
+                        </div>
+    
+                        <div class="field ">
+                            <label class="label">Powtórz hasło</label>
+                            <p class="control has-icons-left">
+                                <input class="input" type="text" name="password_add2" placeholder="Password">
+                                <span class="icon is-small is-left">
+                        <i class="fas fa-lock"></i>
+                      </span>
+                            </p>
+                        </div>
+    
+                        <div class="field is-fullwidth">
+                            <label class="label">Wybierz uprawnienia</label>
+                            <div class="select is-fullwidth">
+                                <select name="credentials_select">
+                        <option>Użytkownik</option>
+                        <option>Operator</option>
+                        <option>Administrator</option>
+                      </select>
+                            </div>
+                        </div>
+    
+                        <!-- <div class="field is-fullwidth">
+                            <label class="label">Wybierz obszar</label>
+                            <div class="select is-fullwidth">
+                                <select name="credentials_select">
+                        <option>obszar nr. 1</option>
+                        <option>obszar nr. 2</option>
+                        <option>obszar nr. 3</option>
+                      </select>
+                            </div>
+                        </div> -->
+    
+                        <div class="field">
+                            <p class="control">
+                                <button type="submit" class="button is-info is-fullwidth">
+                        Utwórz konto
+                      </button>
+                            </p>
+                        </div>
+                    </form>
+    
+    
+                </div>
+    
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for msg in messages %} {% if msg == "Taki użytkownik już istnieje"%}
+                <div class="notification is-danger is-light has-text-centered">{{msg}}</div>
+                {% endif %} {% if msg == "Hasła nie są jednakowe"%}
+                <div class="notification is-danger is-light has-text-centered">{{msg}}</div>
+                {% endif %} {% if msg == "Pomyślnie utworzono użytkownika"%}
+                <div class="notification is-success is-light has-text-centered">{{msg}}</div>
+                {% endif %}
+                {% endfor %} {% endif %} {% endwith %}
+    
+    
+    
+            </div>
+    </body>
+</html>
+    

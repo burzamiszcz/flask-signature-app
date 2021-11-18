@@ -41,7 +41,6 @@ def make_trans_bg(path):
     img.putdata(newData)
     img.save(path, "PNG")
 
-
 def itm_training(name_surname, path):
     make_trans_bg(f'./static/training_lists_signed/signatures/{name_surname}.png')
     signature = Image(f'./static/training_lists_signed/signatures/{name_surname}.png')
@@ -78,7 +77,6 @@ def make_training(title, teacher, time, date, agenda):
     workbook.save(f"./static/training_lists_empty/{title}.xlsx")
     xlsx2pdf(f"./static/training_lists_empty/{title}.xlsx", 
             f"./static/pdf_trainings/{title}.pdf")
-
 
 def group_read(path):
     sheet = pd.read_excel(path)
@@ -143,17 +141,6 @@ def before_request():
         g.training_select = session['training_select']
     else:
         g.training_select = None
-
-
-# @app.before_request
-# def before_request():
-#     if 'credential' in session:
-#         g.credential = session['credential']
-#         g.id = session['id']
-#         g.username = session['username']
-#     else:
-#         g.credential = None
-        
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -264,9 +251,30 @@ def signature():
         f.write(imgdata)
     return "Hello" #json.dumps({'status':'OK','data': signature_string})
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+@app.route('/add_user', methods=['GET', 'POST'])
+def menu_add_user():
 
+    if request.method == 'POST':
+        username = request.form['username_add'].lower()
+        password = request.form['password_add']
+        password2 = request.form['password_add2']
+        credential = request.form['credentials_select']
+        if credential == 'Użytkownik':
+            credential = 'user'
+        elif credential == 'Administrator':
+            credential = 'admin'
+        elif credential == 'Operator':
+            credential = 'operator'
+
+        if password != password2:
+            flash("Hasła nie są jednakowe")
+        else:
+            response = requests.post("http://login:11000/new_user", json = {"username": username, "password": password, "credential": credential})
+            if response.json()['status'] == "exist":
+                flash("Taki użytkownik już istnieje")
+            if response.json()['status'] == "created":
+                flash("Pomyślnie utworzono użytkownika")
+    return render_template('add_user.html')
 
 
 if __name__ == '__main__':
