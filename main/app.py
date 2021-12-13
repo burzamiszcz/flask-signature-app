@@ -53,13 +53,11 @@ def itm_training(name_surname, path):
     while sheet[f'B{9 + i}'].value:
         i += 1
     for j in range(len(full_data_list)):
-        if name_surname[0] == full_data_list[j][1] and name_surname[1] == full_data_list[j][2]:
-            sheet[f'B{9 + i}'] = str(name_surname[1] + ' ' + name_surname[0])
-            sheet[f'C{9 + i}'] = full_data_list[j][4]
-            sheet[f'D{9 + i}'] = full_data_list[j][5]
-            sheet[f'E{9 + i}'] = today_date()
-            sheet.add_image(signature, f'F{9 + i}')
-            break
+        # if name_surname[0] == full_data_list[j][1] and name_surname[1] == full_data_list[j][2]:
+        sheet[f'B{9 + i}'] = str(name_surname[1] + ' ' + name_surname[0])
+        sheet[f'E{9 + i}'] = today_date()
+        sheet.add_image(signature, f'D{9 + i}')
+        break
     for person in people_list:
         if name_surname[0] == person[0] and name_surname[1] == person[1]:
             people_list.remove(person)
@@ -72,8 +70,8 @@ def make_training(title, teacher, time, date, agenda):
     sheet[f'A2'] = str(title)
     sheet[f'A4'] = str(agenda)
     sheet[f'A6'] = str(date)
-    sheet[f'D6'] = str(time)
-    sheet[f'E6'] = str(teacher)
+    sheet[f'C6'] = str(time)
+    sheet[f'D6'] = str(teacher)
     workbook.save(f"./static/training_lists_empty/{title}.xlsx")
     xlsx2pdf(f"./static/training_lists_empty/{title}.xlsx", 
             f"./static/pdf_trainings/{title}.pdf")
@@ -83,7 +81,7 @@ def group_read(path):
     list = sheet.values.tolist()
     list_only_namesurname = list[:]
     for i in range(len(list)):
-        list_only_namesurname[i] = [list_only_namesurname[i][1], list_only_namesurname[i][2]]
+        list_only_namesurname[i] = [list_only_namesurname[i][0], list_only_namesurname[i][1]]
     list_only_namesurname = sorted(list_only_namesurname, key=itemgetter(0))
 
     return list, list_only_namesurname
@@ -235,6 +233,7 @@ def add_training():
         time = request.form['time']
         date = request.form['date']
         agenda = request.form['agenda']
+        # respose = requests.post("http://login:11000/", json = {'title': title, 'teacher': teacher, 'date': date, 'agenda': agenda})
         make_training(title, teacher, time, date, agenda)
         
     return render_template('add_training.html', trainings = trainings)
@@ -258,18 +257,18 @@ def menu_add_user():
         username = request.form['username_add'].lower()
         password = request.form['password_add']
         password2 = request.form['password_add2']
-        credential = request.form['credentials_select']
-        if credential == 'Użytkownik':
-            credential = 'user'
-        elif credential == 'Administrator':
-            credential = 'admin'
-        elif credential == 'Operator':
-            credential = 'operator'
+        # credential = request.form['credentials_select']
+        # if credential == 'Użytkownik':
+        #     credential = 'user'
+        # elif credential == 'Administrator':
+        #     credential = 'admin'
+        # elif credential == 'Operator':
+        #     credential = 'operator'
 
         if password != password2:
             flash("Hasła nie są jednakowe")
         else:
-            response = requests.post("http://login:11000/new_user", json = {"username": username, "password": password, "credential": credential})
+            response = requests.post("http://login:11000/new_user", json = {"username": username, "password": password})
             if response.json()['status'] == "exist":
                 flash("Taki użytkownik już istnieje")
             if response.json()['status'] == "created":

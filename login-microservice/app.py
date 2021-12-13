@@ -17,11 +17,12 @@ def login():
     password = request.json['password']
 
     if username:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect('/app/users.db')
         conn.row_factory = dict_factory
         c = conn.cursor()  
         c.execute(f"SELECT * FROM users WHERE username='{username}'")
         user = c.fetchone()
+        print(user, flush=True)
         c.close()
     try:
         if user:
@@ -35,12 +36,12 @@ def login():
 
 @app.route('/new_user', methods=['POST', 'GET'])
 def new_user():
-    # username = request.json['username']
-    # password = request.json['password']
+    username = request.json['username']
+    password = request.json['password']
     # credential = request.json['credential'] 
-    username = 'admin23'
-    password = 'admin23'
-    credential = 'admin'
+    # username = 'admin23'
+    # password = 'admin23'
+    # credential = 'admin'
     conn = sqlite3.connect('/app/users.db')
     conn.row_factory = dict_factory
     c = conn.cursor()  
@@ -50,7 +51,7 @@ def new_user():
     if user == None:
         conn = sqlite3.connect('/app/users.db')
         c = conn.cursor()  
-        c.execute(f"INSERT INTO users (username, password, credential) VALUES ('{username}', '{password}', '{credential}')")
+        c.execute(f"INSERT INTO users (username, password, credential) VALUES ('{username}', '{password}', 'admin')")
         print('poszlo', flush=True)
         conn.commit()
         return jsonify({"status": "created"}) 

@@ -15,6 +15,13 @@ services:
             - 11000:11000
         volumes:
             - /login-microservice:/login-microservice/
+    documents:
+        build:
+            .\documents-microservice
+        restart: always
+        ports:
+            - 12000:12000
+
     # user:
     #     build:
     #         .\user-microservice
