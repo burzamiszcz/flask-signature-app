@@ -4,17 +4,6 @@
 
 Program służy do zarządzania dostępem, na podstawie rozpoznawania twarzy
 
-Link do strony:
-http://zpipwr2021.atthost24.pl/login
-
-hasło i login:
-admin / admin
-
-Hosting:
-https://secure.atthost.pl/login/
-hasło i login
-zpipwr2021 / zpipwr2021
-
 1. Zainstaluj Dockera i przejdz przez tutorial, musisz takze zainstalowac linuxa za pomocą poradników:
 https://www.docker.com/
 https://docs.microsoft.com/pl-pl/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package
